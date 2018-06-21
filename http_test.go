@@ -80,6 +80,17 @@ func TestHTTPPool(t *testing.T) {
 	p := cfgroupcache.NewHTTPPool("should-be-ignored", "should-be-ignored")
 	p.Set(routerAddr, childAddr...)
 
+	var called bool
+	p.Transport = func(c groupcache.Context) http.RoundTripper {
+		called = true
+		return http.DefaultTransport
+	}
+	defer func() {
+		if !called {
+			t.Fatal("Transport not used")
+		}
+	}()
+
 	// Dummy getter function. Gets should go to children only.
 	// The only time this process will handle a get is when the
 	// children can't be contacted for some reason.

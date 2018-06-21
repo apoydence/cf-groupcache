@@ -11,6 +11,8 @@ import (
 
 type HTTPPool struct {
 	*groupcache.HTTPPool
+
+	Transport func(groupcache.Context) http.RoundTripper
 }
 
 func NewHTTPPool(selfRoute, selfAppInstance string) *HTTPPool {
@@ -22,11 +24,15 @@ func NewHTTPPoolOpts(selfRoute, selfAppInstance string, o *groupcache.HTTPPoolOp
 }
 
 func modifier(p *groupcache.HTTPPool) *HTTPPool {
-	p.Transport = func(groupcache.Context) http.RoundTripper {
-		return &requestModifier{}
+	hp := &HTTPPool{HTTPPool: p}
+	p.Transport = func(c groupcache.Context) http.RoundTripper {
+		return &requestModifier{
+			p:   hp,
+			ctx: c,
+		}
 	}
 
-	return &HTTPPool{p}
+	return hp
 }
 
 func (p *HTTPPool) Set(route string, appInstances ...string) {
@@ -38,6 +44,8 @@ func (p *HTTPPool) Set(route string, appInstances ...string) {
 }
 
 type requestModifier struct {
+	p   *HTTPPool
+	ctx groupcache.Context
 }
 
 func (m *requestModifier) RoundTrip(r *http.Request) (*http.Response, error) {
@@ -53,5 +61,9 @@ func (m *requestModifier) RoundTrip(r *http.Request) (*http.Response, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	r = r.WithContext(ctx)
 
-	return http.DefaultTransport.RoundTrip(r)
+	if m.p.Transport == nil {
+		return http.DefaultTransport.RoundTrip(r)
+	}
+
+	return m.p.Transport(m.ctx).RoundTrip(r)
 }
