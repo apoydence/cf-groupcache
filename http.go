@@ -58,7 +58,7 @@ func (m *requestModifier) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.URL.Host = parts[0]
 	r.Header.Set("X-CF-APP-INSTANCE", parts[1])
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), time.Second)
 	r = r.WithContext(ctx)
 
 	if m.p.Transport == nil {
