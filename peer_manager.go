@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	capi "github.com/apoydence/go-capi"
+	capi "github.com/poy/go-capi"
 )
 
 type PeerSetter interface {

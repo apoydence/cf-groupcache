@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	cfgroupcache "github.com/apoydence/cf-groupcache"
-	capi "github.com/apoydence/go-capi"
 	"github.com/golang/groupcache"
+	cfgroupcache "github.com/poy/cf-groupcache"
+	capi "github.com/poy/go-capi"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 
 	p := cfgroupcache.NewHTTPPool(route, appInstance)
 
-	capiClient := capi.NewClient(vcap.CFApi, vcap.ApplicationID, vcap.SpaceID, time.Second, http.DefaultClient)
+	capiClient := capi.NewClient(vcap.CFApi, vcap.ApplicationID, vcap.SpaceID, http.DefaultClient)
 
 	peerManager := cfgroupcache.NewPeerManager(route, vcap.ApplicationID, p, capiClient, log)
 

@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	cfgroupcache "github.com/apoydence/cf-groupcache"
-	capi "github.com/apoydence/go-capi"
-	"github.com/apoydence/onpar"
-	. "github.com/apoydence/onpar/expect"
-	. "github.com/apoydence/onpar/matchers"
+	cfgroupcache "github.com/poy/cf-groupcache"
+	capi "github.com/poy/go-capi"
+	"github.com/poy/onpar"
+	. "github.com/poy/onpar/expect"
+	. "github.com/poy/onpar/matchers"
 )
 
 type TM struct {

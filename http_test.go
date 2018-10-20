@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	cfgroupcache "github.com/apoydence/cf-groupcache"
+	cfgroupcache "github.com/poy/cf-groupcache"
 	"github.com/golang/groupcache"
 )
 
